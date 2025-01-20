@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+<title>Point Dynamics</title>
+<style>
+body {
+  font-family: 'Ubuntu', sans-serif;
+  background-color: #FDFAF4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+  font-weight: bold;
+}
+#saved-points {
+  color: black;
+}
+#game-card {
+  background-color: #F8F5EA;
+  padding: 20px;
+  color: #0c0c0c;
+  border-radius: 10px;
+  position: absolute;
+  width: 300px;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+  z-index: 4;
+  box-shadow: 0px 10px 5px -5px rgba(56, 55, 49, 1);
+}
+#sidebar {
+  border-radius: 10px;
+  text-align: center;
+  background-color: #F8F5EA;
+  position: absolute;
+  width: 175px;
+  height: 200px;
+  top: 25%vh;
+  right: 10vw;
+  box-shadow: 0px 10px 5px -5px rgba(56, 55, 49, 1);
+}
+#loading {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: #FDFAF4;
+  z-index: 100;
+}
+.dice-button {
+  border-radius: 6px;
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0px 9px 8px -5px rgba(56, 55, 49, 1);
+}
+.setting-button {
+  font-weight: bolder;
+  line-height: calc(1.2em + 1px);
+  color: #43525E;
+  border-radius: 6px;
+  position: absolute;
+  top: -10vh;
+  left: -20%;
+  width: 75px;
+  height: 75px;
+  background-color: #697681;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0px 8px 5px -1px rgba(56, 55, 49, 1);
+  font-size: 30px;
+}
+#settings-card {
+  background-color: #43525E;
+  padding: 20px;
+  color: #0c0c0c;
+  justify-content: center;
+  text-align: center;
+  border-radius: 10px;
+  position: relative;
+  width: 300px;
+  height: 85vh;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+  z-index: 6;
+  box-shadow: 0px 10px 5px -5px rgba(56, 55, 49, 1);
+}
+.dice-button::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+}
+.dice-button.fire::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: rgb(205, 40, 10);
+  border-radius: 50%;
+  position: absolute;
+}
+.dice-button.gold::before {
+  background-color: rgb(220, 143, 11);
+}
+.dice-button.seed::before {
+  background-color: rgb(110, 216, 40);
+}
+.dice-button.water::before {
+  background-color: rgb(45, 96, 237);
+}
+
+#loading-line {
+  position: relative;
+  color: black;
+  text-align: center;
+  top: 50%;
+  left: -150%;
+  width: 150vw;
+  height: 50px;
+  background-color: #EFEAD4;
+  animation: moveline 10s linear forwards;
+  z-index: 101;
+  box-shadow: 0px 10px 5px -5px rgba(56, 55, 49, 1);
+}
+@keyframes moveline {
+  0% {
+    left: -50%vw;
+  }
+  100% {
+    left: 100%
+  }
+}
+#gameVer {
+  z-index: 101;
+  color: #0c0c0c;
+  position: relative;
+  top: 30%;
+  justify-content: center;
+  text-align: center;
+}
+#software {
+  z-index: 101;
+  color: #0c0c0c;
+  position: relative;
+  top: 10%;
+  justify-content: center;
+  text-align: center;
+}
+#settingsMenu {
+  position: fixed;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: #697681;
+  z-index: 5;
+  justify-content: center;
+  text-align: center;
+}
+.setting-button2 {
+  font-weight: bolder;
+  line-height: calc(1.2em + 1px);
+  color: #43525E;
+  border-radius: 6px;
+  position: fixed;
+  width: 75px;
+  height: 75px;
+  background-color: #697681;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0px 8px 5px -1px rgba(56, 55, 49, 1);
+  font-size: 30px;
+  z-index: 7;
+}
+#lowerbar {
+  z-index: -1;
+  position: fixed;
+  border-radius: 10px;
+  bottom: -10%;
+  height: 200px;
+  width: 100%;
+  background-color: #D44E10;
+  box-shadow: 5px 5px 5px 7px rgb(58, 28, 8);
+}
+#area {
+  position: fixed;
+  z-index: 5;
+  top: 1%
+}
+button {
+  border-radius: 10px;
+  border: none;
+  width: auto;
+  height: 70px;
+  background-color: #43525E;
+  color: #0c0c0c;
+  font-family: Ubuntu;
+  font-weight: bolder;
+  cursor: pointer;
+  box-shadow: 0px 8px 5px -1px rgb(28, 28, 28);
+}
+</style>
+<script src="software.js"></script>
+</head>
+<body>
+<div id="area"></div>
+<div id="settingsMenu" style="display: none">
+  <div id="settings-card">Settings
+  <div id="ach1000"></div>
+  <div id="tubes"></div>
+  </div>
+  <button style="position: fixed; top: 100px; left: 50%" onclick="tubetrade()">Trade For Tubes</button>
+  <p style="position: fixed; top: 175px; left: 51.75%; font-size: 10px;">5 Tokens = 1 Tube</p>
+  <button style="position: fixed; top: 100px; left: 42%" onclick="tubes1()">Full Mesa</button>
+  <p style="position: fixed; top: 175px; left: 43.55%; font-size: 10px;">Mesa Zone<br> Only</p>
+  <button class="setting-button2" style="position: fixed; top: 95px; left: 34%;"onclick="settings()">⬣</button>
+</div>
+<div id="loading" style="display: none">
+  <div id="gameVer"></div>
+  <div id="software"></div>
+  <div id="loading-line"></div>
+</div>
+<button class="setting-button" onclick="settings()">⬣</button>
+<div id="game-card">
+<p>v.2.10R</p>
+<button class="dice-button"onclick="rollDice()"></button>
+<div id="lowerbar" style="display: none;"></div>
+</div>
+<div id="sidebar">
+<p>Sidebar</p>
+<div id="saved-points"></div>
+<div id="side-points"></div>
+<div id="rolled-points"></div>
+<div id="seeds"></div>
+</div>
+<script>
+  let gameVer = 2.1007
+if (softwareVersion >= "211") {
+  console.log(`Running Software C ${softwareVersion}`)
+} else {
+  alert(`Unsupported Counter Version : Version needed C 211 or Higher`)
+}
+window.addEventListener('keydown', function(event) {
+ if ((event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '='))) {
+  event.preventDefault()
+ }})
+window.addEventListener('wheel', function(event) {
+  if(event.ctrlKey) {
+  event.preventDefault()
+}})
+if (softwareVersion >= "211") {
+function loading() {
+  const loadingLine = document.getElementById('loading-line')
+  document.getElementById('loading').style.display = "block"
+  updatePowerUp()
+  loadingLine.style.animation = "moveline 5s linear forwards"
+  setTimeout(function() {
+  document.getElementById('loading').style.display = "none"
+  updatePowerUp()
+  if (softwareVersion >= "211") {
+  console.log(`Running Software C ${softwareVersion}`)
+}
+}, 2525)}
+function tubetrade() {
+  if (savedPoints >= 5) {
+    savedPoints = savedPoints - 5
+    tube = tube + 1
+    updatePowerUp()
+} else {
+  alert('Not enough Tokens')
+}
+}
+function default1() {
+  background = 10
+}
+function rollDice() {
+  var diceButton = document.querySelector('.dice-button')
+  diceButton.classList.remove('fire')
+  diceButton.classList.remove('gold')
+  diceButton.classList.remove('seed')
+  diceButton.classList.remove('water')
+  rollCount = rollCount + 1
+  obsidianRolled = false
+  earthRolled = false
+  fireUp = false
+  waterUp = false
+  breezeUp = false
+  seedUp = false
+  goldUp = false
+  sidePoints = sidePoints + rolledPoints
+  if (rollCount % 25 === 0) {
+  savedPoints = savedPoints + sidePoints
+  sidePoints = 0
+  }
+  if (savedPoints >= 1000) {
+    ach1000 = true
+    alert(`1000 Tokens!`)
+  }
+  rolledPoints = Math.floor(Math.random() * 6 * multiplier) + 1;
+  console.log(`Rolled Points: ${rolledPoints} Side Points: ${sidePoints}`)
+  if (Math.random() < 0.7) {
+  powerUp()
+  }
+  console.log(`Rounds: ${rollCount}`)
+  if (rollCount >= 100) {
+    multiplier = 2
+  }
+  bg()
+  bgRounds = bgRounds - 1
+  if (unlocked1) {
+  default1()
+  }
+  if (bgRounds <= 0) {
+  background === 0
+  }
+}
+function tubes1() {
+  if (tube >= 100) {
+  tube = tube - 100
+  unlocked1 = true
+  background = 10
+  loading()
+  updatePowerUp()
+  } else {
+  console.log('Not enough tubes.')
+  }
+}
+function bg() {
+  const gameCard = document.getElementById('game-card')
+  const sidebar = document.getElementById('sidebar')
+  if (background === 1 && document.getElementById('lowerbar').style.display === 'none') {
+    loading()
+    gameCard.style.backgroundColor = '#E87D1E'
+    sidebar.style.backgroundColor = '#E87D1E'
+    document.body.style.backgroundColor = '#DDEFF1'
+    document.getElementById('lowerbar').style.display = 'block'
+    document.getElementById('area').innerText = `Mesa`
+  }
+  if (background === 1 && bgRounds <= 0 && document.getElementById('lowerbar').style.display === 'block') {
+    loading()
+    bgRounds = 25
+    gameCard.style.backgroundColor = '#F8F5EA'
+    sidebar.style.backgroundColor = '#F8F5EA'
+    document.body.style.backgroundColor = '#FDFAF4'
+    document.getElementById('lowerbar').style.display = 'none'
+    background = 0
+    document.getElementById('area').innerText = `Flat`
+  }
+}
+function powerUp() {
+  if (Math.random() < 0.4){
+  obsidianRolled = true
+  } else if (Math.random() < 0.3) {
+  earthRolled = true
+  } else if (Math.random() < 0.2 && bgRounds <= 0 && background === 0) {
+  console.log('Mesa BG')
+  background = 1
+  bgRounds = 25
+  }
+  if (background === 10) {
+  const gameCard = document.getElementById('game-card')
+  const sidebar = document.getElementById('sidebar')
+  gameCard.style.backgroundColor = '#E87D1E'
+  sidebar.style.backgroundColor = '#E87D1E'
+  document.body.style.backgroundColor = '#DDEFF1'
+  document.getElementById('lowerbar').style.display = 'block'
+  background = 10
+  document.getElementById('area').innerText = `Mesa`
+  }
+  if (obsidianRolled) {
+  if (Math.random() < 0.5){
+  waterUp = true
+  } else {
+  fireUp = true
+  }}
+  if (earthRolled) {
+  if (Math.random() < 0.5) {
+  
+  } else if (Math.random() < 0.5 && background === 1 || background === 10) {
+  goldUp = true
+  console.log('Aurium (Golden)')
+  } else if (Math.random() < 0.5 && background === 0) {
+  seedUp = true
+  }
+  }
+  console.log(`Obsidian: ${obsidianRolled} Fire: ${fireUp} Water: ${waterUp}`)
+  console.log(`Earth: ${earthRolled} Breeze: ${breezeUp} Aurium: ${goldUp}`)
+  updatePowerUp()
+}
+function updatePowerUp() {
+var diceButton = document.querySelector('.dice-button')
+if (goldUp) {
+  sidePoints = sidePoints + 40
+  diceButton.classList.remove('fire')
+  diceButton.classList.add('gold')
+  diceButton.classList.remove('seed')
+  diceButton.classList.remove('water')
+}
+if (seedUp) {
+  seeds = seeds + rolledPoints
+  rolledPoints = 0
+  diceButton.classList.remove('fire')
+  diceButton.classList.remove('gold')
+  diceButton.classList.add('seed')
+  diceButton.classList.remove('water')
+}
+if (fireUp) {
+  sidePoints = 0
+  diceButton.classList.add('fire')
+  diceButton.classList.remove('gold')
+  diceButton.classList.remove('seed')
+  diceButton.classList.remove('water')
+}
+if (waterUp) {
+  savedPoints = savedPoints + seeds
+  seeds = 0
+  diceButton.classList.remove('fire')
+  diceButton.classList.remove('gold')
+  diceButton.classList.remove('seed')
+  diceButton.classList.add('water')
+}
+  document.getElementById('saved-points').innerText = `Token Points: ${savedPoints}`;
+  document.getElementById('rolled-points').innerText = `Roll Points: ${rolledPoints}`;
+  document.getElementById('side-points').innerText = `Side Points: ${sidePoints}`;
+  document.getElementById('tubes').innerText = `Tubes: ${tube}`;
+  document.getElementById('gameVer').innerText = `Point Dynamics ${gameVer}`;
+  document.getElementById('software').innerText = `Operating On C ${softwareVersion}`;
+  document.getElementById('ach1000').innerText = `1 Thousand Token Achivement: ${ach1000}`;
+  document.getElementById('seeds').innerText = `Wheat Seeds: ${seeds}`;
+}
+function settings() {
+  settingsOpen = !settingsOpen
+  loading()
+  if (settingsOpen) {
+  document.getElementById('settingsMenu').style.display = 'block'
+  } else if (!settingsOpen) {
+  document.getElementById('settingsMenu').style.display = 'none'
+}
+}
+}
+
+
+</script>
+</body>
+</html>
