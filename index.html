@@ -27,14 +27,14 @@ body {
   padding: 20px;
   color: #0c0c0c;
   border-radius: 10px;
-  position: absolute;
+  position: fixed;
   width: 300px;
   height: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-weight: bold;
-  z-index: 4;
+  z-index: 2;
   box-shadow: 0px 10px 5px -5px rgba(56, 55, 49, 1);
 }
 #sidebar {
@@ -73,9 +73,9 @@ body {
   line-height: calc(1.2em + 1px);
   color: #43525E;
   border-radius: 6px;
-  position: absolute;
-  top: -10vh;
-  left: -20%;
+  position: fixed;
+  top: -30px;
+  left: -80%;
   width: 75px;
   height: 75px;
   background-color: #697681;
@@ -129,7 +129,6 @@ body {
 .dice-button.water::before {
   background-color: rgb(45, 96, 237);
 }
-
 #loading-line {
   position: relative;
   color: black;
@@ -198,8 +197,8 @@ body {
   z-index: 7;
 }
 #lowerbar {
-  z-index: -1;
   position: fixed;
+  z-index: 1;
   border-radius: 10px;
   bottom: -10%;
   height: 200px;
@@ -224,16 +223,87 @@ button {
   cursor: pointer;
   box-shadow: 0px 8px 5px -1px rgb(28, 28, 28);
 }
+.container {
+  position: fixed;
+  top:0%;
+  left: 0%;
+  display: none;
+}
+#commandInput {
+  position: fixed;
+  width: 320px;
+  display: block
+}
+#modCode {
+  width: 100%;
+  height: 100px;
+  border: 2px solid #000;
+  background-color: #f8f8f8;
+  padding: 10px;
+  font-family: monospace;
+  resize: none;
+}
+#mod-section {
+  position: fixed;
+  top: -20px;
+  left: 10px;
+}
+input[type="file"] {
+  border: 1px solid #000;
+  padding: 5px;
+  background-color: #f8f8f8;
+}
+.gem-effect {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  animation: fadeInOut 5s ease-in-out;
+}
+.gem-effect h3 {
+  margin: 0;
+  font-size: 18px;
+}
+.gem-effect p {
+  margin: 5px 0 0;
+  font-size: 14px;
+}
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-20px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
 </style>
 <script src="software.js"></script>
 </head>
 <body>
+  <canvas id="rainCanvas"></canvas>
+  <div id="mod-section">
+    <h2 style="color: #2c2c2c; background-color: #fff; border-radius: 5px;">Add-On Loader</h2>
+    <input type="file" id="modFile" onchange="loadModFile()">
+  </div>
+  <div class="container">
+    <h2>Execute Commands</h2>
+    <button class="execute-btn" onclick="executeCommand()">Execute</button>
+    <input type="text" id="commandInput" class="command-input" placeholder="Format: execute /type/ /name/ /data if needed/" oninput="showSuggestions()">
+
+    <div id="output" class="output"></div>
+    <div id="suggestions" style="position: fixed; top: 250px;"></div>
+    </div>
 <div id="area"></div>
 <div id="settingsMenu" style="display: none">
   <div id="settings-card">Settings
   <div id="ach1000"></div>
   <div id="tubes"></div>
   </div>
+  <button style="position: fixed; top: 100px; left: 62.25%" onclick="executeOn()">Dev Tools</button>
   <button style="position: fixed; top: 100px; left: 50%" onclick="tubetrade()">Trade For Tubes</button>
   <p style="position: fixed; top: 175px; left: 51.75%; font-size: 10px;">5 Tokens = 1 Tube</p>
   <button style="position: fixed; top: 100px; left: 42%" onclick="tubes1()">Full Mesa</button>
@@ -245,12 +315,12 @@ button {
   <div id="software"></div>
   <div id="loading-line"></div>
 </div>
-<button class="setting-button" onclick="settings()">⬣</button>
 <div id="game-card">
 <p>v.2.10R</p>
 <button class="dice-button"onclick="rollDice()"></button>
-<div id="lowerbar" style="display: none;"></div>
+<button class="setting-button" onclick="settings()">⬣</button>
 </div>
+<div id="lowerbar" style="display: none;"></div>
 <div id="sidebar">
 <p>Sidebar</p>
 <div id="saved-points"></div>
@@ -259,7 +329,7 @@ button {
 <div id="seeds"></div>
 </div>
 <script>
-  let gameVer = 2.1007
+  let gameVer = 2.10314
 if (softwareVersion >= "211") {
   console.log(`Running Software C ${softwareVersion}`)
 } else {
@@ -274,7 +344,102 @@ window.addEventListener('wheel', function(event) {
   event.preventDefault()
 }})
 if (softwareVersion >= "211") {
+function executeOn() {
+  devTools = true
+  document.querySelector('.container').style.display = 'block'
+}
+// List of possible commands
+const commandList = [
+  'execute fct rollDice()',
+  'execute fct updatePowerUp()',
+  'execute fct loading()',
+  'execute fct powerUp()',
+  'execute vis startRain()',
+  'execute vis stopRain()',
+  'execute vis triggerLightning()',
+  'execute dta heavyRain toggle',
+  'execute dta savedPoints 32BIT',
+  'execute dta resetAll 0',
+  'execute mod <modCode>'
+];
+
+// Function to display suggestions based on the input
+function showSuggestions() {
+  const commandInput = document.getElementById("commandInput").value.trim().toLowerCase();
+  const suggestionsDiv = document.getElementById("suggestions");
+
+  // Clear any existing suggestions
+  suggestionsDiv.innerHTML = '';
+
+  // If input is not empty, show relevant suggestions
+  if (commandInput) {
+    const filteredCommands = commandList.filter(command => command.toLowerCase().includes(commandInput));
+    
+    // Create and display suggestions
+    filteredCommands.forEach(command => {
+      const suggestionItem = document.createElement("div");
+      suggestionItem.textContent = command;
+      suggestionItem.onclick = function() {
+        document.getElementById("commandInput").value = command;  // Auto-complete input when clicked
+        suggestionsDiv.innerHTML = '';  // Clear suggestions
+      };
+      suggestionsDiv.appendChild(suggestionItem);
+    });
+  }
+}
+
+// The main function that executes the command
+function executeCommand() {
+  if (devTools) {
+    const commandInput = document.getElementById("commandInput").value.trim();
+    const outputDiv = document.getElementById("output");
+
+    if (commandInput === 'execute fct rollDice()') {
+      rollDice();
+      outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`;
+    } else if (commandInput === 'execute fct updatePowerUp()') {
+      updatePowerUp();
+      outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`;
+    } else if (commandInput === 'execute fct loading()') {
+      loading();
+      outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`;
+    } else if (commandInput === 'execute fct powerUp()') {
+      powerUp();
+      outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`;
+    } else if (commandInput === 'execute vis startRain()') {
+      startRain();
+      console.log('Started rain');
+    } else if (commandInput === 'execute vis triggerLightning()') {
+      triggerLightning()
+    } else if (commandInput === 'execute dta heavyRain toggle') {
+      heavyRain = !heavyRain
+    } else if (commandInput === 'execute vis stopRain()') {
+      stopRain();
+    } else if (commandInput === 'execute dta resetAll 0') {
+      resetAllPointsAndSeeds();
+      console.log('Stopped rain');
+    } else if (commandInput === 'execute dta savedPoints 32BIT') {
+      savedPoints = 2147483647;
+      outputDiv.innerHTML = `Executed: ${commandInput}<br>Results.`;
+    } else if (commandInput.startsWith('execute mod ')) {
+  const modCode = commandInput.replace('execute mod ', '').trim();
+  try {
+    eval(modCode);
+    outputDiv.innerHTML = `✅ Mod Loaded Successfully!<br>Executed: ${commandInput}`;
+  } catch (err) {
+    outputDiv.innerHTML = `❌ Failed to load mod: ${err}`;
+  }
+
+    } else {
+      outputDiv.innerHTML = `Invalid command. Please use the formatting: 'execute /type/ /name/ /data if needed/'.`;
+    }
+
+    document.getElementById("commandInput").value = '';
+  }
+}
+
 function loading() {
+  if (savedPoints < 2147483647) {
   const loadingLine = document.getElementById('loading-line')
   document.getElementById('loading').style.display = "block"
   updatePowerUp()
@@ -285,20 +450,190 @@ function loading() {
   if (softwareVersion >= "211") {
   console.log(`Running Software C ${softwareVersion}`)
 }
-}, 2525)}
+}, 2525)}}
 function tubetrade() {
   if (savedPoints >= 5) {
-    savedPoints = savedPoints - 5
-    tube = tube + 1
-    updatePowerUp()
+  savedPoints = savedPoints - 5
+  tube = tube + 1
+  updatePowerUp()
 } else {
   alert('Not enough Tokens')
 }
 }
+const rainCanvas = document.getElementById('rainCanvas')
+const rainCtx = rainCanvas.getContext('2d')
+rainCanvas.width = window.innerWidth
+rainCanvas.height = window.innerHeight
+
+class Raindrop {
+  constructor() {
+    this.x = Math.random() * rainCanvas.width
+    this.y = Math.random() * rainCanvas.height
+    this.length = Math.random() * 20 + 10
+    this.speed = 5
+    this.opacity = Math.random() * 0.3 + 0.2
+    this.splashY = rainCanvas.height - Math.random() * 10
+  }
+
+  draw() {
+    rainCtx.strokeStyle = `rgba(25, 181, 255, ${this.opacity})`
+    rainCtx.lineWidth = 5.5
+    rainCtx.beginPath()
+    rainCtx.moveTo(this.x, this.y)
+    rainCtx.lineTo(this.x, this.y + this.length)
+    rainCtx.stroke()
+  }
+
+  splash() {
+    rainCtx.fillStyle = `rgba(25, 181, 255, 0.3)`
+    rainCtx.beginPath()
+    rainCtx.arc(this.x, this.splashY, 2.5, 0, Math.PI * 2)
+    rainCtx.fill()
+  }
+
+  update() {
+    this.y += this.speed
+    if (this.y > rainCanvas.height) {
+      this.y = -this.length
+      this.x = Math.random() * rainCanvas.width
+      this.splash()
+    }
+  }
+}
+
+let raindrops = []
+let numRaindrops = 0
+let heavyRain = true
+let fadeDuration = 2000;
+
+function startRain() {
+  raindrops = []
+
+  if (heavyRain) {
+    numRaindrops = 100
+  } else {
+    numRaindrops = 30
+  }
+
+  for (let i = 0; i < numRaindrops; i++) {
+    raindrops.push(new Raindrop())
+  }
+
+  rainCanvas.style.display = 'block'
+  animateRain()
+  triggerLightning()
+  setTimeout(() => {
+    let rainSound = new Audio('rain-sound-307165.mp3');
+    rainSound.loop = true;
+    rainSound.volume = 0;
+    rainSound.play().catch(() => {
+      console.warn("Audio failed to play due to restrictions.");
+    });
+
+    setTimeout(() => {
+      let fadeInterval = setInterval(() => {
+        if (rainSound.volume < 0.2) {
+          rainSound.volume += 0.01;
+        } else {
+          clearInterval(fadeInterval);
+        }
+      }, fadeDuration / 50);
+
+      rainSound.addEventListener('timeupdate', () => {
+        if (rainSound.currentTime >= 3.5) {
+          rainSound.currentTime = 0.44;
+          setTimeout(() => {
+            rainSound.volume = 0.15;
+          }, 10);
+          setTimeout(() => {
+            rainSound.volume = 0.1;
+          }, 20);
+        }
+      });
+    }, 0);
+  }, 5000);
+}
+
+function stopRain() {
+  rainCanvas.style.display = 'none';
+  rainSound.pause();
+  rainSound.currentTime = 0;
+}
+
+function animateRain() {
+  rainCtx.clearRect(0, 0, rainCanvas.width, rainCanvas.height)
+  for (let drop of raindrops) {
+    drop.update()
+    drop.draw()
+  }
+  requestAnimationFrame(animateRain)
+}
+
+function triggerLightning() {
+  if (!heavyRain) return;
+
+  const delay = Math.random() * 7000 + 3000;
+
+  setTimeout(() => {
+    document.body.style.transition = 'background-color 0.2s'
+    document.body.style.backgroundColor = 'rgba(40, 40, 50, 0.412)'
+
+    setTimeout(() => {
+      document.body.style.backgroundColor = 'rgba(30, 30, 40, 1)'
+    }, 360)
+    forceThunderSound();
+
+    triggerLightning();
+  }, delay);
+}
+
+function forceThunderSound() {
+  const thunderSounds = [
+    'thunder-clap-242335.mp3',
+    'thunder-33569.mp3',
+    'big-thunder-clap-99753.mp3'
+  ];
+
+  const randomThunder = thunderSounds[Math.floor(Math.random() * thunderSounds.length)];
+
+  const thunder = new Audio(randomThunder);
+
+  thunder.volume = 1.0;
+  thunder.play().catch(() => {
+    console.warn("Audio failed to play due to restrictions.");
+  });
+  thunder.play()
+  thunder.volume = 0.5;
+
+  const button = document.createElement('button');
+  button.style.display = 'none';
+  document.body.appendChild(button);
+
+  button.addEventListener('click', () => {
+    thunder.play();
+    document.body.removeChild(button);
+  });
+
+  setTimeout(() => {
+    button.click();
+  }, 100);
+}
+startRain()
 function default1() {
   background = 10
-}
+
+}}
+
 function rollDice() {
+  if (savedPoints >= 2147483647 ) {
+    savedPoints = 2147483647
+  }
+  if (sidePoints >= 2147483647) {
+    sidePoints = 2147483647
+  }
+  if (seeds >= 2147483647) {
+    seeds = 2147483647
+  }
   var diceButton = document.querySelector('.dice-button')
   diceButton.classList.remove('fire')
   diceButton.classList.remove('gold')
@@ -314,17 +649,17 @@ function rollDice() {
   goldUp = false
   sidePoints = sidePoints + rolledPoints
   if (rollCount % 25 === 0) {
-  savedPoints = savedPoints + sidePoints
-  sidePoints = 0
+    savedPoints = savedPoints + sidePoints
+    sidePoints = 0
   }
-  if (savedPoints >= 1000) {
+  if (savedPoints >= 1000 && !ach1000 && !devTools) {
     ach1000 = true
     alert(`1000 Tokens!`)
   }
   rolledPoints = Math.floor(Math.random() * 6 * multiplier) + 1;
   console.log(`Rolled Points: ${rolledPoints} Side Points: ${sidePoints}`)
   if (Math.random() < 0.7) {
-  powerUp()
+    powerUp()
   }
   console.log(`Rounds: ${rollCount}`)
   if (rollCount >= 100) {
@@ -333,23 +668,25 @@ function rollDice() {
   bg()
   bgRounds = bgRounds - 1
   if (unlocked1) {
-  default1()
+    default1()
   }
   if (bgRounds <= 0) {
-  background === 0
+    background === 0
   }
 }
+
 function tubes1() {
   if (tube >= 100) {
-  tube = tube - 100
-  unlocked1 = true
-  background = 10
-  loading()
-  updatePowerUp()
+    tube = tube - 100
+    unlocked1 = true
+    background = 10
+    loading()
+    updatePowerUp()
   } else {
-  console.log('Not enough tubes.')
+    console.log('Not enough tubes.')
   }
 }
+
 function bg() {
   const gameCard = document.getElementById('game-card')
   const sidebar = document.getElementById('sidebar')
@@ -357,7 +694,7 @@ function bg() {
     loading()
     gameCard.style.backgroundColor = '#E87D1E'
     sidebar.style.backgroundColor = '#E87D1E'
-    document.body.style.backgroundColor = '#DDEFF1'
+    document.body.style.backgroundColor = '#EBF8F9'
     document.getElementById('lowerbar').style.display = 'block'
     document.getElementById('area').innerText = `Mesa`
   }
@@ -372,78 +709,81 @@ function bg() {
     document.getElementById('area').innerText = `Flat`
   }
 }
+
 function powerUp() {
   if (Math.random() < 0.4){
-  obsidianRolled = true
+    obsidianRolled = true
   } else if (Math.random() < 0.3) {
-  earthRolled = true
+    earthRolled = true
   } else if (Math.random() < 0.2 && bgRounds <= 0 && background === 0) {
-  console.log('Mesa BG')
-  background = 1
-  bgRounds = 25
+    console.log('Mesa BG')
+    background = 1
+    bgRounds = 25
   }
   if (background === 10) {
-  const gameCard = document.getElementById('game-card')
-  const sidebar = document.getElementById('sidebar')
-  gameCard.style.backgroundColor = '#E87D1E'
-  sidebar.style.backgroundColor = '#E87D1E'
-  document.body.style.backgroundColor = '#DDEFF1'
-  document.getElementById('lowerbar').style.display = 'block'
-  background = 10
-  document.getElementById('area').innerText = `Mesa`
+    const gameCard = document.getElementById('game-card')
+    const sidebar = document.getElementById('sidebar')
+    gameCard.style.backgroundColor = '#E87D1E'
+    sidebar.style.backgroundColor = '#E87D1E'
+    document.body.style.backgroundColor = '#EBF8F9'
+    document.getElementById('lowerbar').style.display = 'block'
+    background = 10
+    document.getElementById('area').innerText = `Mesa`
   }
   if (obsidianRolled) {
-  if (Math.random() < 0.5){
-  waterUp = true
-  } else {
-  fireUp = true
-  }}
-  if (earthRolled) {
-  if (Math.random() < 0.5) {
-  
-  } else if (Math.random() < 0.5 && background === 1 || background === 10) {
-  goldUp = true
-  console.log('Aurium (Golden)')
-  } else if (Math.random() < 0.5 && background === 0) {
-  seedUp = true
+    if (Math.random() < 0.5){
+      waterUp = true
+    } else {
+      fireUp = true
+    }
   }
+  if (earthRolled) {
+    if (Math.random() < 0.5) {
+
+    } else if (Math.random() < 0.5 && background === 1 || background === 10) {
+      goldUp = true
+      console.log('Aurium (Golden)')
+    } else if (Math.random() < 0.5 && background === 0) {
+      seedUp = true
+    }
   }
   console.log(`Obsidian: ${obsidianRolled} Fire: ${fireUp} Water: ${waterUp}`)
   console.log(`Earth: ${earthRolled} Breeze: ${breezeUp} Aurium: ${goldUp}`)
   updatePowerUp()
 }
+
 function updatePowerUp() {
-var diceButton = document.querySelector('.dice-button')
-if (goldUp) {
-  sidePoints = sidePoints + 40
-  diceButton.classList.remove('fire')
-  diceButton.classList.add('gold')
-  diceButton.classList.remove('seed')
-  diceButton.classList.remove('water')
-}
-if (seedUp) {
-  seeds = seeds + rolledPoints
-  rolledPoints = 0
-  diceButton.classList.remove('fire')
-  diceButton.classList.remove('gold')
-  diceButton.classList.add('seed')
-  diceButton.classList.remove('water')
-}
-if (fireUp) {
-  sidePoints = 0
-  diceButton.classList.add('fire')
-  diceButton.classList.remove('gold')
-  diceButton.classList.remove('seed')
-  diceButton.classList.remove('water')
-}
-if (waterUp) {
-  savedPoints = savedPoints + seeds
-  seeds = 0
-  diceButton.classList.remove('fire')
-  diceButton.classList.remove('gold')
-  diceButton.classList.remove('seed')
-  diceButton.classList.add('water')
-}
+  var diceButton = document.querySelector('.dice-button')
+  if (goldUp) {
+    sidePoints = sidePoints + 40
+    diceButton.classList.remove('fire')
+    diceButton.classList.add('gold')
+    diceButton.classList.remove('seed')
+    diceButton.classList.remove('water')
+  }
+  if (seedUp) {
+    seeds = seeds + rolledPoints
+    rolledPoints = 0
+    diceButton.classList.remove('fire')
+    diceButton.classList.remove('gold')
+    diceButton.classList.add('seed')
+    diceButton.classList.remove('water')
+  }
+  if (fireUp) {
+    sidePoints = 0
+    diceButton.classList.add('fire')
+    diceButton.classList.remove('gold')
+    diceButton.classList.remove('seed')
+    diceButton.classList.remove('water')
+  }
+  if (waterUp) {
+    savedPoints = savedPoints + seeds
+    seeds = 0
+    diceButton.classList.remove('fire')
+    diceButton.classList.remove('gold')
+    diceButton.classList.remove('seed')
+    diceButton.classList.add('water')
+  }
   document.getElementById('saved-points').innerText = `Token Points: ${savedPoints}`;
   document.getElementById('rolled-points').innerText = `Roll Points: ${rolledPoints}`;
   document.getElementById('side-points').innerText = `Side Points: ${sidePoints}`;
@@ -457,14 +797,57 @@ function settings() {
   settingsOpen = !settingsOpen
   loading()
   if (settingsOpen) {
-  document.getElementById('settingsMenu').style.display = 'block'
+    document.getElementById('settingsMenu').style.display = 'block'
   } else if (!settingsOpen) {
-  document.getElementById('settingsMenu').style.display = 'none'
-}
-}
+    document.getElementById('settingsMenu').style.display = 'none'
+  }
 }
 
+function loadModFile() {
+  const file = document.getElementById('modFile').files[0];
+  if (!file) return;
 
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      eval(e.target.result);
+      alert('✅ Mod File Loaded Successfully!');
+    } catch (err) {
+      alert('Failed to load mod: ' + err);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function resetAllPointsAndSeeds() {
+  savedPoints = 0;
+  rolledPoints = 0;
+  sidePoints = 0;
+  rollCount = 0;
+
+  seeds = 0;
+  seedUp = false;
+
+  fireUp = false;
+  waterUp = false;
+  breezeUp = false;
+  obsidianRolled = false;
+  earthRolled = false;
+  settingsOpen = false;
+  background = 0;
+  ach1000 = false;
+  multiplier = 1;
+  bgRounds = 0;
+  cactusUp = false;
+  goldUp = false;
+  tube = 0;
+  unlocked1 = false;
+  devTools = false;
+  heavyRain = true;
+  mudUp = false;
+
+  console.log("All points and seeds have been reset.");
+}
 </script>
 </body>
 </html>
