@@ -1,4 +1,4 @@
-const softwareVersion = "211";
+const softwareVersion = "212";
 //Base//
 let savedPoints = 0
 let rolledPoints = 0
@@ -10,12 +10,6 @@ let breezeUp = false
 //2.10//
 
 //2.10.0.01//
-let rain = false
-let mudUp = false
-let sunnySeeds = false
-let sunnyOne = false
-let sunnyTwo = false
-let sunnyThree = false
 //2.10.0.02//
 let obsidianRolled = false
 let earthRolled = false
@@ -35,3 +29,9 @@ let unlocked1 = false
 //2.10.0.7//
 let seeds = 0
 let seedUp = false
+//2.10.0-RC1//
+let devTools = false
+//2.11.0.1//
+let mudUp = false
+let lightRain = false
+let heavyRain = false
