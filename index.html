@@ -35,7 +35,7 @@ body {
   align-items: center;
   font-weight: bold;
   z-index: 2;
-  box-shadow: 0px 10px 5px -5px rgba(56, 55, 49, 1);
+  box-shadow: 0px 10px 5px -5px rgb(0, 0, 0);
 }
 #sidebar {
   border-radius: 10px;
@@ -46,7 +46,7 @@ body {
   height: 200px;
   top: 25%vh;
   right: 10vw;
-  box-shadow: 0px 10px 5px -5px rgba(56, 55, 49, 1);
+  box-shadow: 0px 10px 5px -5px rgb(0, 0, 0);
 }
 #loading {
   position: fixed;
@@ -85,24 +85,42 @@ body {
   justify-content: center;
   position: relative;
   cursor: pointer;
-  box-shadow: 0px 8px 5px -1px rgba(56, 55, 49, 1);
+  box-shadow: 0px 8px 5px -1px rgb(0, 0, 0);
   font-size: 30px;
 }
-#settings-card {
-  background-color: #43525E;
-  padding: 20px;
-  color: #0c0c0c;
+#settings-card h5 {
+  font-size: 20px;
+}
+.multiplier-section p {
+  font-size: 14px;
+}
+#achievement-container {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  text-align: center;
-  border-radius: 10px;
-  position: relative;
-  width: 300px;
-  height: 85vh;
-  flex-direction: column;
-  align-items: center;
-  font-weight: bold;
-  z-index: 6;
-  box-shadow: 0px 10px 5px -5px rgba(56, 55, 49, 1);
+  gap: 5px;
+  margin-top: 0px;
+}
+.button-container button {
+  padding: 8px 12px;
+  font-size: 12px;
+  background: #536777;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.button-container button:hover {
+  background: #2e3c48;
+}
+.info-text {
+  font-size: 10px;
+  color: #bbb;
+  margin-top: 10px;
 }
 .dice-button::before {
   content: '';
@@ -167,6 +185,7 @@ body {
   text-align: center;
 }
 #settingsMenu {
+  color: white;
   position: fixed;
   flex-direction: column;
   align-items: center;
@@ -179,21 +198,13 @@ body {
 }
 .setting-button2 {
   font-weight: bolder;
-  line-height: calc(1.2em + 1px);
-  color: #43525E;
+  color: #536777;
   border-radius: 6px;
-  position: fixed;
-  width: 75px;
-  height: 75px;
+  width: 70px;
+  height: 70px;
   background-color: #697681;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  cursor: pointer;
-  box-shadow: 0px 8px 5px -1px rgba(56, 55, 49, 1);
   font-size: 30px;
+  cursor: pointer;
   z-index: 7;
 }
 #lowerbar {
@@ -223,56 +234,143 @@ button {
   cursor: pointer;
   box-shadow: 0px 8px 5px -1px rgb(28, 28, 28);
 }
-.container {
-  position: fixed;
-  top:0%;
-  left: 0%;
-  display: none;
+#container {
+  background-color: #5c5045;
+  border-radius: 10px;
+  position: absolute;
+  width: 300px;
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  z-index: 999;
+  box-shadow: 0px 10px 15px -5px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  overflow: hidden;
+  border: none;
+}
+#container-header {
+  background-color: #eb8334;
+  color: #ffffff;
+  padding: 6px;
+  font-size: 14px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.close-btn {
+  background-color: #fc291e;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+.close-btn:hover {
+  background-color: #ea2323;
 }
 #commandInput {
-  position: fixed;
-  width: 320px;
-  display: block
-}
-#modCode {
+  background-color: #3c3730;
+  border: none;
+  outline: none;
+  color: #f4f4f4;
+  font-size: 14px;
+  padding: 5px;
   width: 100%;
-  height: 100px;
-  border: 2px solid #000;
-  background-color: #f8f8f8;
-  padding: 10px;
-  font-family: monospace;
-  resize: none;
+  box-sizing: border-box;
 }
-#mod-section {
-  position: fixed;
-  top: -20px;
-  left: 10px;
+#suggestions {
+  background-color: #3c3730;
+  color: #f4f4f4;
+  font-size: 12px;
+  max-height: 60px;
+  overflow-y: auto;
+  padding: 5px;
+  border-top: none;
+}
+#output {
+  background-color: #5c5045;
+  color: #bfbfbf;
+  font-size: 12px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 5px;
+  font-family: 'Ubuntu';
+}
+#suggestions div {
+  padding: 3px 5px;
+  cursor: pointer;
+}
+
+#suggestions div:hover {
+  background-color: #3c3730;
+}
+#mod-container {
+  background-color: #dbdbdb;
+  border-radius: 10px;
+  position: absolute;
+  width: 300px;
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  z-index: 999;
+  box-shadow: 0px 10px 15px -5px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  overflow: hidden;
+  border: none;
+}
+#mod-header {
+  background-color: #45dd34;
+  color: #ffffff;
+  padding: 6px;
+  font-size: 14px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#modFile {
+  background-color: #a7a7a7;
+  height: 27.5px;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 14px;
+  position: absolute;
+  top: 27.25px;
+  width: 100%;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: bolder;
 }
 input[type="file"] {
   border: 1px solid #000;
   padding: 5px;
-  background-color: #f8f8f8;
+  color: #3c3730;
+  font-weight: bolder;
+  background-color: #979797;
+  font-family: 'Ubuntu', sans-serif;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
-.gem-effect {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
-  animation: fadeInOut 5s ease-in-out;
+input[type="file"]::file-selector-button {
+  background-color: #939393;
+  color: white;
+  border: none;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: 0.2s;
 }
-.gem-effect h3 {
-  margin: 0;
-  font-size: 18px;
+input[type="file"]::file-selector-button:hover {
+  background-color: #898989;
 }
-.gem-effect p {
-  margin: 5px 0 0;
-  font-size: 14px;
+input[type="file"]:focus {
+  outline: 2px solid #5f5f5f;
 }
 @keyframes fadeInOut {
   0% { opacity: 0; transform: translateY(-20px); }
@@ -280,35 +378,84 @@ input[type="file"] {
   90% { opacity: 1; }
   100% { opacity: 0; transform: translateY(-20px); }
 }
+#achievement-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100px;
+  gap: 15px;
+  color: white;
+}
+.achievement-box {
+  width: 20px;
+  height: 20px;
+  margin-top: 5px;
+  box-shadow: 0px 8px 5px -1px rgba(56, 55, 49, 1);
+  background-color: #c4c4c4;
+  transition: background-color 0.3s;
+}
+.achievement-box.unlocked {
+  background-color: #34eb3d;
+  box-shadow: 0 0 10px #34eb3d;
+}
+.achievement-text {
+  font-size: 12px;
+  width: 275px;
+  color: #ffffff;
+  font-family: 'Ubuntu', sans-serif;
+  left: 20px;
+}
 </style>
 <script src="software.js"></script>
 </head>
 <body>
   <canvas id="rainCanvas"></canvas>
-  <div id="mod-section">
-    <h2 style="color: #2c2c2c; background-color: #fff; border-radius: 5px;">Add-On Loader</h2>
-    <input type="file" id="modFile" onchange="loadModFile()">
-  </div>
-  <div class="container">
-    <h2>Execute Commands</h2>
-    <button class="execute-btn" onclick="executeCommand()">Execute</button>
-    <input type="text" id="commandInput" class="command-input" placeholder="Format: execute /type/ /name/ /data if needed/" oninput="showSuggestions()">
-
-    <div id="output" class="output"></div>
-    <div id="suggestions" style="position: fixed; top: 250px;"></div>
+  <div id="mod-container" style="display: none;">
+    <div id="mod-header">
+      <div onclick="comms = false; document.querySelector('#container').style.display = 'none'; document.querySelector('#mod-container').style.display = 'none'"class="close-btn"></div>
+      <span class="title">Add-On Loader</span>
     </div>
-<div id="area"></div>
-<div id="settingsMenu" style="display: none">
-  <div id="settings-card">Settings
-  <div id="ach1000"></div>
-  <div id="tubes"></div>
+    <input type="file" id="modFile" style="font-weight: bolder; background-color: #c1c1c1; font-family: 'Ubuntu', sans-serif;"onchange="loadModFile()">
   </div>
-  <button style="position: fixed; top: 100px; left: 62.25%" onclick="executeOn()">Dev Tools</button>
-  <button style="position: fixed; top: 100px; left: 50%" onclick="tubetrade()">Trade For Tubes</button>
-  <p style="position: fixed; top: 175px; left: 51.75%; font-size: 10px;">5 Tokens = 1 Tube</p>
-  <button style="position: fixed; top: 100px; left: 42%" onclick="tubes1()">Full Mesa</button>
-  <p style="position: fixed; top: 175px; left: 43.55%; font-size: 10px;">Mesa Zone<br> Only</p>
-  <button class="setting-button2" style="position: fixed; top: 95px; left: 34%;"onclick="settings()">⬣</button>
+  <div id="container" style="display: none;">
+      <div id="container-header">
+        <div onclick="comms = false; document.querySelector('#container').style.display = 'none'; document.querySelector('#mod-container').style.display = 'none'"class="close-btn"></div>
+        <span class="title">Terminal</span>
+      </div>
+      <input 
+        id="commandInput" 
+        oninput="showSuggestions()" 
+        onkeydown="if(event.key === 'Enter') executeCommand()" 
+        placeholder="..." />
+      <div id="suggestions"></div>
+      <div id="output"></div>
+    </div>
+  
+<div id="area"></div>
+<div id="settingsMenu" style="display: none;" class="settings-container">
+  <div id="settings-card">
+    <h5>Settings</h5>
+    <div id="tubes"></div>
+    <div class="multiplier-section">
+      <p>Current Multiplier: <span id="currentMultiplier">1</span>x</p>
+      <button style="color: white;"id="upgradeButton">+3x Multiplier</button>
+    </div>
+    <div style="position: fixed; top: 40px; left: 10px;";id="achievement-container">
+      <h5>Achievements</h5>
+      <div class="achievement-box" id="ach1000-box"><p style="position: relative;left: 30px; width: 250px;">  1000 Tokens Collected</p></div>
+      <div class="achievement-box" id="ach10000-box"><p style="position: relative;left: 30px; width: 250px;">10000 Tokens Collected</p></div>
+      <div class="achievement-box" id="ach20000-box"><p style="position: relative;left: 30px; width: 250px;">20000 Tokens Collected</p></div>
+      <div class="achievement-box" id="ach50000-box"><p style="position: relative;left: 30px; width: 250px;">50000 Tokens Collected</p></div>
+    </div>
+
+    <div style="position: fixed; top: 250px; left: 25%;"class="button-container">
+      <button onclick="executeOn()">Coding Tools<p class="info-text">Developer Mode <br>(NO Achievements)</p></button>
+      <button onclick="tubetrade()">Get Tubes <p class="info-text">5 Tokens = 1 Tube</p></button>
+      <button onclick="tubes1()">Mesa Planet<p class="info-text">Mesa Zone Only</p></button>
+      <button onclick="startAutoClicker()">Auto Rolling <p class="info-text">Enable Auto Roll (10s)</p></button>
+      <button onclick="settings()" class="setting-button2">O<p class="info-text">Exit Settings</p></button>
+    </div>
+  </div>
 </div>
 <div id="loading" style="display: none">
   <div id="gameVer"></div>
@@ -316,7 +463,7 @@ input[type="file"] {
   <div id="loading-line"></div>
 </div>
 <div id="game-card">
-<p>v.2.10.3 (Stable)</p>
+<p>v.2.10.5</p>
 <button class="dice-button"onclick="rollDice()"></button>
 <button class="setting-button" onclick="settings()">⬣</button>
 </div>
@@ -329,114 +476,204 @@ input[type="file"] {
 <div id="seeds"></div>
 </div>
 <script>
-  let gameVer = 2.10314
+  let gameVer = 2.105
+  let terminalOffsetX = 0
+  let terminalOffsetY = 0
+  let terminalDragging = false
+  let modOffsetX = 0
+  let modOffsetY = 0
+  let modDragging = false
+
 if (softwareVersion >= "211") {
   console.log(`Running Software C ${softwareVersion}`)
 } else {
   alert(`Unsupported Counter Version : Version needed C 211 or Higher`)
 }
+if (softwareVersion >= "211") {
+  function updateDisplay() {
+  currentMultiplier.textContent = multiplier
+}
+const terminalContainer = document.getElementById('container')
+const terminalHeader = document.getElementById('container-header')
+terminalContainer.style.position = 'absolute'
+terminalHeader.addEventListener('mousedown', (e) => {
+  terminalDragging = true
+  terminalOffsetX = e.clientX - terminalContainer.getBoundingClientRect().left
+  terminalOffsetY = e.clientY - terminalContainer.getBoundingClientRect().top
+  terminalContainer.style.zIndex = 1000
+})
+document.addEventListener('mousemove', (e) => {
+  if (terminalDragging) {
+  terminalContainer.style.left = (e.clientX - terminalOffsetX) + 'px'
+  terminalContainer.style.top = (e.clientY - terminalOffsetY) + 'px'
+  }
+})
+document.addEventListener('mouseup', () => {
+  terminalDragging = false
+})
+const modContainer = document.getElementById('mod-container')
+const modHeader = document.getElementById('mod-header')
+modHeader.onmousedown = function(e) {
+  modDragging = true;
+  modOffsetX = e.clientX - modContainer.getBoundingClientRect().left
+  modOffsetY = e.clientY - modContainer.getBoundingClientRect().top
+}
+
+document.onmousemove = function(e) {
+  if (modDragging) {
+  modContainer.style.left = e.clientX - modOffsetX + 'px'
+  modContainer.style.top = e.clientY - modOffsetY + 'px'
+  }
+}
+
+document.onmouseup = function() {
+  modDragging = false
+}
 window.addEventListener('keydown', function(event) {
  if ((event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '='))) {
   event.preventDefault()
- }})
+  }})
 window.addEventListener('wheel', function(event) {
   if(event.ctrlKey) {
   event.preventDefault()
 }})
-if (softwareVersion >= "211") {
-function executeOn() {
-  devTools = true
-  document.querySelector('.container').style.display = 'block'
+function startAutoClicker() {
+if (savedPoints >= 75) {
+if (!autoclicker) {
+  savedPoints = savedPoints - 75
+  autoclicker = true
+  autoClickerInterval = setInterval(rollDice, 100)
+  autoClickerTimeout = setTimeout(stopAutoClicker, 10000)
+  settings()
+}} else {
+  alert("Not enough Tokens. Need: 75 Tokens")
+}}
+function stopAutoClicker() {
+  console.log("Autoclicker off.")
+  autoclicker = false;
+  clearInterval(autoClickerInterval)
+  clearTimeout(autoClickerTimeout)
 }
-// List of possible commands
+function rainOff() {
+  heavyRain = false
+  stopRain()
+  
+}
+function executeOn() {
+  devTools = !devTools
+  comms = !comms
+  cheats = true
+  if (comms) {
+  document.querySelector('#container').style.display = 'block'
+  document.querySelector('#mod-container').style.display = 'block'
+} else {
+  document.querySelector('#container').style.display = 'none'
+  document.querySelector('#mod-container').style.display = 'none'
+  suggestionsDiv.innerHTML = ''
+  if (commandInput) {
+  const filteredCommands = commandList.filter(command => command.toLowerCase().includes(commandInput))
+  filteredCommands.forEach(command => {
+  const suggestionItem = document.createElement("div")
+  suggestionItem.textContent = command;
+  suggestionItem.onclick = function() {
+  document.getElementById("commandInput").value = command
+  suggestionsDiv.innerHTML = ''
+}
+  suggestionsDiv.appendChild(suggestionItem)
+})
+}
+  suggestionItem.remove()
+}}
 const commandList = [
-  'execute fct rollDice()',
-  'execute fct updatePowerUp()',
-  'execute fct loading()',
-  'execute fct powerUp()',
-  'execute vis startRain()',
-  'execute vis stopRain()',
-  'execute vis triggerLightning()',
-  'execute dta heavyRain toggle',
-  'execute dta savedPoints 32BIT',
-  'execute dta resetAll 0',
-  'execute mod <modCode>'
+  'fct rollDice',
+  'fct powerUp',
+  'fct loading',
+  'fct triggerLightning',
+  'fct rainOff',
+  'fct autoClicker',
+  'dta reset 0',
+  'dta savedPoints 32Bit',
+  'adn <addonCode>'
 ];
 
-// Function to display suggestions based on the input
+const upgradeButton = document.getElementById('upgradeButton')
+const currentMultiplier = document.getElementById('currentMultiplier')
+const nextCostDisplay = document.getElementById('nextCost')
+
+function showNotEnoughTokensPopup() {
+  alert(`Not enough tokens! You need ${nextCost} tokens to upgrade.`)
+}
+upgradeButton.addEventListener('click', () => {
+  if (savedPoints >= nextCost && multiplier <= 64) {
+  savedPoints -= nextCost
+  multiplier = multiplier + 3
+  nextCost = nextCost + nextCost
+  updateDisplay()
+  alert(`Upgrade successful! New Multiplier: x${multiplier}`);
+} else if (savedPoints <= nextCost){
+  showNotEnoughTokensPopup()
+} else if (multiplier > 64) {
+  multiplier = 67
+}
+})
 function showSuggestions() {
-  const commandInput = document.getElementById("commandInput").value.trim().toLowerCase();
-  const suggestionsDiv = document.getElementById("suggestions");
-
-  // Clear any existing suggestions
-  suggestionsDiv.innerHTML = '';
-
-  // If input is not empty, show relevant suggestions
-  if (commandInput) {
-    const filteredCommands = commandList.filter(command => command.toLowerCase().includes(commandInput));
-    
-    // Create and display suggestions
-    filteredCommands.forEach(command => {
-      const suggestionItem = document.createElement("div");
-      suggestionItem.textContent = command;
-      suggestionItem.onclick = function() {
-        document.getElementById("commandInput").value = command;  // Auto-complete input when clicked
-        suggestionsDiv.innerHTML = '';  // Clear suggestions
-      };
-      suggestionsDiv.appendChild(suggestionItem);
-    });
-  }
+  const commandInput = document.getElementById("commandInput").value.trim().toLowerCase()
+  const suggestionsDiv = document.getElementById("suggestions")
+  suggestionsDiv.innerHTML = ''
+if (!commandInput) return
+  const filteredCommands = commandList.filter(command => command.toLowerCase().includes(commandInput))
+if (filteredCommands.length > 0) {
+  const suggestionItem = document.createElement("div")
+  suggestionItem.textContent = filteredCommands[0]
+  suggestionItem.onclick = function() {
+  document.getElementById("commandInput").value = filteredCommands[0]
+  suggestionsDiv.innerHTML = ''
 }
-
-// The main function that executes the command
+suggestionsDiv.appendChild(suggestionItem);
+}
+}
 function executeCommand() {
-  if (devTools) {
-    const commandInput = document.getElementById("commandInput").value.trim();
-    const outputDiv = document.getElementById("output");
-
-    if (commandInput === 'execute fct rollDice()') {
-      rollDice();
-      outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`;
-    } else if (commandInput === 'execute fct updatePowerUp()') {
-      updatePowerUp();
-      outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`;
-    } else if (commandInput === 'execute fct loading()') {
-      loading();
-      outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`;
-    } else if (commandInput === 'execute fct powerUp()') {
-      powerUp();
-      outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`;
-    } else if (commandInput === 'execute vis startRain()') {
-      startRain();
-      console.log('Started rain');
-    } else if (commandInput === 'execute vis triggerLightning()') {
-      triggerLightning()
-    } else if (commandInput === 'execute dta heavyRain toggle') {
-      heavyRain = !heavyRain
-    } else if (commandInput === 'execute vis stopRain()') {
-      stopRain();
-    } else if (commandInput === 'execute dta resetAll 0') {
-      resetAllPointsAndSeeds();
-      console.log('Stopped rain');
-    } else if (commandInput === 'execute dta savedPoints 32BIT') {
-      savedPoints = 2147483647;
-      outputDiv.innerHTML = `Executed: ${commandInput}<br>Results.`;
-    } else if (commandInput.startsWith('execute mod ')) {
-  const modCode = commandInput.replace('execute mod ', '').trim();
-  try {
-    eval(modCode);
-    outputDiv.innerHTML = `✅ Mod Loaded Successfully!<br>Executed: ${commandInput}`;
-  } catch (err) {
-    outputDiv.innerHTML = `❌ Failed to load mod: ${err}`;
-  }
-
-    } else {
-      outputDiv.innerHTML = `Invalid command. Please use the formatting: 'execute /type/ /name/ /data if needed/'.`;
-    }
-
-    document.getElementById("commandInput").value = '';
-  }
+if (comms) {
+  const commandInput = document.getElementById("commandInput").value.trim()
+  const outputDiv = document.getElementById("output")
+if (commandInput === 'fct rollDice') {
+  rollDice()
+  outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`
+} else if (commandInput === 'fct powerUp') {
+  powerUp()
+  updatePowerUp()
+  outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`
+} else if (commandInput === 'fct loading') {
+  loading()
+  outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`
+} else if (commandInput === 'fct triggerLightning') {
+  triggerLightning()
+  outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`
+} else if (commandInput === 'fct rainOff') {
+  rainOff()
+  outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`
+} else if (commandInput === 'fct autoClicker') {
+  savedPoints = savedPoints + 75
+  startAutoClicker()
+  outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`
+} else if (commandInput === 'dta reset 0') {
+  resetAllPointsAndSeeds()
+  outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`
+} else if (commandInput === 'dta savedPoints 32Bit') {
+  savedPoints = 2147483699
+  outputDiv.innerHTML = `Executed: ${commandInput}<br>Results: ${results}`
+} else if (commandInput.startsWith('adn ')) {
+  const modCode = commandInput.replace('adn ', '').trim()
+try {
+  eval(modCode);
+  outputDiv.innerHTML = `Changes Loaded Successfully!<br>Executed: ${commandInput}`
+} catch (err) {
+  outputDiv.innerHTML = `Failed to load changes: ${err}`
+}} else {
+  outputDiv.innerHTML = `Invalid command. Please use the formatting: '/type/ /name/ /data if needed/'.`
 }
+  document.getElementById("commandInput").value = ''
+}}
 
 function loading() {
   if (savedPoints < 2147483647) {
@@ -451,6 +688,19 @@ function loading() {
   console.log(`Running Software C ${softwareVersion}`)
 }
 }, 2525)}}
+function loading2() {
+  if (savedPoints < 2147483647) {
+  const loadingLine = document.getElementById('loading-line')
+  document.getElementById('loading').style.display = "block"
+  updatePowerUp()
+  loadingLine.style.animation = "moveline 1s linear forwards"
+  setTimeout(function() {
+  document.getElementById('loading').style.display = "none"
+  updatePowerUp()
+  if (softwareVersion >= "211") {
+  console.log(`Running Software C ${softwareVersion}`)
+}
+}, 505)}}
 function tubetrade() {
   if (savedPoints >= 5) {
   savedPoints = savedPoints - 5
@@ -460,155 +710,113 @@ function tubetrade() {
   alert('Not enough Tokens')
 }
 }
+
 const rainCanvas = document.getElementById('rainCanvas')
 const rainCtx = rainCanvas.getContext('2d')
 rainCanvas.width = window.innerWidth
 rainCanvas.height = window.innerHeight
-
-class Raindrop {
-  constructor() {
-    this.x = Math.random() * rainCanvas.width
-    this.y = Math.random() * rainCanvas.height
-    this.length = Math.random() * 20 + 10
-    this.speed = 5
-    this.opacity = Math.random() * 0.3 + 0.2
-    this.splashY = rainCanvas.height - Math.random() * 10
-  }
-
+class Raindrop{constructor(){this.x = Math.random() * rainCanvas.width
+  this.y = Math.random()*rainCanvas.height
+  this.length = Math.random() * 20 + 10
+  this.speed = 5
+  this.opacity = Math.random() * 0.3 + 0.2
+  this.splashY = rainCanvas.height-Math.random() * 10
+} 
   draw() {
-    rainCtx.strokeStyle = `rgba(25, 181, 255, ${this.opacity})`
-    rainCtx.lineWidth = 5.5
-    rainCtx.beginPath()
-    rainCtx.moveTo(this.x, this.y)
-    rainCtx.lineTo(this.x, this.y + this.length)
-    rainCtx.stroke()
-  }
-
+  rainCtx.strokeStyle = `rgba(25,181,255,${this.opacity})`
+  rainCtx.lineWidth = 5.5
+  rainCtx.beginPath()
+  rainCtx.moveTo(this.x,this.y)
+  rainCtx.lineTo(this.x,this.y + this.length)
+  rainCtx.stroke()
+} 
   splash() {
-    rainCtx.fillStyle = `rgba(25, 181, 255, 0.3)`
-    rainCtx.beginPath()
-    rainCtx.arc(this.x, this.splashY, 2.5, 0, Math.PI * 2)
-    rainCtx.fill()
+  rainCtx.fillStyle=`rgba(25,181,255,0.3)`
+  rainCtx.beginPath()
+  rainCtx.arc(this.x,this.splashY, 2.5, 0,Math.PI * 2)
+  rainCtx.fill()
   }
-
   update() {
-    this.y += this.speed
-    if (this.y > rainCanvas.height) {
-      this.y = -this.length
-      this.x = Math.random() * rainCanvas.width
-      this.splash()
-    }
-  }
-}
+  this.y += this.speed
+if(this.y > rainCanvas.height){this.y =- this.length
+  this.x=Math.random() * rainCanvas.width
+  this.splash()
+}}}
 
 let raindrops = []
 let numRaindrops = 0
 let heavyRain = true
-let fadeDuration = 2000;
-
+let fadeDuration = 2000
+let rainSound = new Audio('rain-sound-307165.mp3')
+function stopRain(){
+  rainCanvas.style.display='none';
+  rainSound.volume = 0;
+  thunder.volume = 0;
+}
 function startRain() {
   raindrops = []
-
-  if (heavyRain) {
-    numRaindrops = 100
-  } else {
-    numRaindrops = 30
-  }
-
-  for (let i = 0; i < numRaindrops; i++) {
-    raindrops.push(new Raindrop())
-  }
-
-  rainCanvas.style.display = 'block'
+if(heavyRain){
+  numRaindrops = 100
+} else {
+  numRaindrops = 0
+}
+for(let i = 0; i < numRaindrops; i++){
+  raindrops.push(new Raindrop()
+)}
+  rainCanvas.style.display='block'
   animateRain()
   triggerLightning()
-  setTimeout(() => {
-    let rainSound = new Audio('rain-sound-307165.mp3');
-    rainSound.loop = true;
-    rainSound.volume = 0;
-    rainSound.play().catch(() => {
-      console.warn("Audio failed to play due to restrictions.");
-    });
-
-    setTimeout(() => {
-      let fadeInterval = setInterval(() => {
-        if (rainSound.volume < 0.2) {
-          rainSound.volume += 0.01;
-        } else {
-          clearInterval(fadeInterval);
-        }
-      }, fadeDuration / 50);
-
-      rainSound.addEventListener('timeupdate', () => {
-        if (rainSound.currentTime >= 3.5) {
-          rainSound.currentTime = 0.44;
-          setTimeout(() => {
-            rainSound.volume = 0.15;
-          }, 10);
-          setTimeout(() => {
-            rainSound.volume = 0.1;
-          }, 20);
-        }
-      });
-    }, 0);
-  }, 5000);
+setTimeout(() => {
+  rainSound.loop = true
+  rainSound.volume = 0
+  rainSound.play().catch(()=>{console.warn("Audio failed to play due to restrictions.")})
+setTimeout(() => {let fadeInterval=setInterval(() => {
+if(rainSound.volume < 0.2)
+{
+  rainSound.volume += 0.01
+} else {clearInterval(fadeInterval)
 }
+  }, fadeDuration / 50)
+rainSound.addEventListener('timeupdate',() => {if(rainSound.currentTime >= 3.5){
+  rainSound.currentTime=0.44
+setTimeout(() => {rainSound.volume = 0.15},10)
+setTimeout(() => {rainSound.volume = 0.1},20)
+}})}, 0)}, 5000)}
+function animateRain(){
+  if (heavyRain) {
+  rainCtx.clearRect(0,0,rainCanvas.width,rainCanvas.height)
+  for(let drop of raindrops){
+  drop.update()
+  drop.draw()
+}}
+requestAnimationFrame(animateRain)}
+function triggerLightning(){
+const thunderSounds=['thunder-clap-242335.mp3','thunder-33569.mp3','big-thunder-clap-99753.mp3']
+const randomThunder = thunderSounds[Math.floor(Math.random() * thunderSounds.length)];
+const thunder = new Audio(randomThunder);
+thunder.volume = 1.0;
+forceThunderSound()
 
-function stopRain() {
-  rainCanvas.style.display = 'none';
-  rainSound.pause();
-  rainSound.currentTime = 0;
-}
-
-function animateRain() {
-  rainCtx.clearRect(0, 0, rainCanvas.width, rainCanvas.height)
-  for (let drop of raindrops) {
-    drop.update()
-    drop.draw()
-  }
-  requestAnimationFrame(animateRain)
-}
-
-function triggerLightning() {
-  if (!heavyRain) return;
-
-  const delay = Math.random() * 7000 + 3000;
-
-  setTimeout(() => {
-    document.body.style.transition = 'background-color 0.2s'
-    document.body.style.backgroundColor = 'rgba(40, 40, 50, 0.412)'
-
-    setTimeout(() => {
-      document.body.style.backgroundColor = 'rgba(30, 30, 40, 1)'
-    }, 360)
-    forceThunderSound();
-
-    triggerLightning();
-  }, delay);
-}
-
-function forceThunderSound() {
-  const thunderSounds = [
-    'thunder-clap-242335.mp3',
-    'thunder-33569.mp3',
-    'big-thunder-clap-99753.mp3'
-  ];
-
+const delay=Math.random() * 7000 + 3000
+setTimeout(() => {document.body.style.transition = 'background-color 0.2s'
+  document.body.style.backgroundColor = 'rgba(40,40,50,0.412)'
+setTimeout(() => {document.body.style.backgroundColor = 'rgba(30,30,40,1)'},360)
+  forceThunderSound()
+  triggerLightning()
+}, delay)}}
+function forceThunderSound(){
+  const thunderSounds=['thunder-clap-242335.mp3','thunder-33569.mp3','big-thunder-clap-99753.mp3']
   const randomThunder = thunderSounds[Math.floor(Math.random() * thunderSounds.length)];
-
   const thunder = new Audio(randomThunder);
-
   thunder.volume = 1.0;
   thunder.play().catch(() => {
-    console.warn("Audio failed to play due to restrictions.");
+  console.warn("Audio failed to play due to restrictions.");
   });
   thunder.play()
   thunder.volume = 0.5;
-
   const button = document.createElement('button');
   button.style.display = 'none';
   document.body.appendChild(button);
-
   button.addEventListener('click', () => {
     thunder.play();
     document.body.removeChild(button);
@@ -618,22 +826,11 @@ function forceThunderSound() {
     button.click();
   }, 100);
 }
-startRain()
 function default1() {
   background = 10
-
-}}
-
+}
 function rollDice() {
-  if (savedPoints >= 2147483647 ) {
-    savedPoints = 2147483647
-  }
-  if (sidePoints >= 2147483647) {
-    sidePoints = 2147483647
-  }
-  if (seeds >= 2147483647) {
-    seeds = 2147483647
-  }
+  updateDisplay()
   var diceButton = document.querySelector('.dice-button')
   diceButton.classList.remove('fire')
   diceButton.classList.remove('gold')
@@ -648,23 +845,61 @@ function rollDice() {
   seedUp = false
   goldUp = false
   sidePoints = sidePoints + rolledPoints
-  if (rollCount % 25 === 0) {
-    savedPoints = savedPoints + sidePoints
-    sidePoints = 0
-  }
-  if (savedPoints >= 1000 && !ach1000 && !devTools) {
-    ach1000 = true
-    alert(`1000 Tokens!`)
-  }
-  rolledPoints = Math.floor(Math.random() * 6 * multiplier) + 1;
+  rolledPoints = 0
+if (savedPoints >= 1000 && !ach1000 && !cheats) {
+  ach1000 = true;
+  alert(`1000 Tokens! Achievement Unlocked!`);
+  document.getElementById('ach1000-box').classList.add('unlocked');
+  localStorage.setItem('ach1000', 'true');
+}
+
+if (savedPoints >= 10000 && !ach10000 && !cheats) {
+  ach10000 = true;
+  alert(`10000 Tokens! Achievement Unlocked!`);
+  document.getElementById('ach10000-box').classList.add('unlocked');
+  localStorage.setItem('ach10000', 'true');
+}
+
+if (savedPoints >= 20000 && !ach20000 && !cheats) {
+  ach20000 = true;
+  alert(`20000 Tokens! Achievement Unlocked!`);
+  document.getElementById('ach20000-box').classList.add('unlocked');
+  localStorage.setItem('ach20000', 'true');
+}
+
+if (savedPoints >= 50000 && !ach50000 && !cheats) {
+  ach50000 = true;
+  alert(`50000 Tokens! Achievement Unlocked!`);
+  document.getElementById('ach50000-box').classList.add('unlocked');
+  localStorage.setItem('ach50000', 'true');
+}
+
+if (localStorage.getItem('ach1000') === 'true' && !cheats) {
+  ach1000 = true;
+  document.getElementById('ach1000-box').classList.add('unlocked');
+}
+
+if (localStorage.getItem('ach10000') === 'true' && !cheats) {
+  ach10000 = true;
+  document.getElementById('ach10000-box').classList.add('unlocked');
+}
+
+if (localStorage.getItem('ach20000') === 'true' && !cheats) {
+  ach20000 = true;
+  document.getElementById('ach20000-box').classList.add('unlocked');
+}
+
+if (localStorage.getItem('ach50000') === 'true' && !cheats) {
+  ach50000 = true;
+  document.getElementById('ach50000-box').classList.add('unlocked');
+}
+  rolledPoints = Math.floor(Math.random() * 5 * multiplier) + 1;
   console.log(`Rolled Points: ${rolledPoints} Side Points: ${sidePoints}`)
   if (Math.random() < 0.7) {
     powerUp()
   }
+
   console.log(`Rounds: ${rollCount}`)
-  if (rollCount >= 100) {
-    multiplier = 2
-  }
   bg()
   bgRounds = bgRounds - 1
   if (unlocked1) {
@@ -673,42 +908,52 @@ function rollDice() {
   if (bgRounds <= 0) {
     background === 0
   }
+  if (rollCount % 10 === 0) {
+  savedPoints = savedPoints + sidePoints
+  sidePoints = 0
+  }
 }
 
 function tubes1() {
   if (tube >= 100) {
-    tube = tube - 100
-    unlocked1 = true
-    background = 10
-    loading()
-    updatePowerUp()
-  } else {
-    console.log('Not enough tubes.')
-  }
-}
+  tube = tube - 100
+  unlocked1 = true
+  background = 10
+  loading()
+  updatePowerUp()
+} else {
+  alert('Not enough tubes.')
+}}
 
 function bg() {
-  const gameCard = document.getElementById('game-card')
-  const sidebar = document.getElementById('sidebar')
-  if (background === 1 && document.getElementById('lowerbar').style.display === 'none') {
-    loading()
-    gameCard.style.backgroundColor = '#E87D1E'
-    sidebar.style.backgroundColor = '#E87D1E'
-    document.body.style.backgroundColor = '#EBF8F9'
-    document.getElementById('lowerbar').style.display = 'block'
-    document.getElementById('area').innerText = `Mesa`
-  }
-  if (background === 1 && bgRounds <= 0 && document.getElementById('lowerbar').style.display === 'block') {
-    loading()
-    bgRounds = 25
-    gameCard.style.backgroundColor = '#F8F5EA'
-    sidebar.style.backgroundColor = '#F8F5EA'
-    document.body.style.backgroundColor = '#FDFAF4'
-    document.getElementById('lowerbar').style.display = 'none'
-    background = 0
-    document.getElementById('area').innerText = `Flat`
-  }
+const gameCard = document.getElementById('game-card')
+const sidebar = document.getElementById('sidebar')
+if (background === 1 && document.getElementById('lowerbar').style.display === 'none') {
+if (!autoclicker) {
+  loading()
+} else {
+  loading2()
 }
+  gameCard.style.backgroundColor = '#E87D1E'
+  sidebar.style.backgroundColor = '#E87D1E'
+  document.body.style.backgroundColor = '#EBF8F9'
+  document.getElementById('lowerbar').style.display = 'block'
+  document.getElementById('area').innerText = `Mesa`
+}
+if (background === 1 && bgRounds <= 0 && document.getElementById('lowerbar').style.display === 'block') {
+if (!autoclicker) {
+  loading()
+} else {
+  loading2()
+}
+  bgRounds = 25
+  gameCard.style.backgroundColor = '#F8F5EA'
+  sidebar.style.backgroundColor = '#F8F5EA'
+  document.body.style.backgroundColor = '#FDFAF4'
+  document.getElementById('lowerbar').style.display = 'none'
+  background = 0
+  document.getElementById('area').innerText = `Flat`
+}}
 
 function powerUp() {
   if (Math.random() < 0.4){
@@ -743,19 +988,19 @@ function powerUp() {
     } else if (Math.random() < 0.5 && background === 1 || background === 10) {
       goldUp = true
       console.log('Aurium (Golden)')
+      sidePoints = sidePoints + 50
     } else if (Math.random() < 0.5 && background === 0) {
       seedUp = true
     }
   }
   console.log(`Obsidian: ${obsidianRolled} Fire: ${fireUp} Water: ${waterUp}`)
   console.log(`Earth: ${earthRolled} Breeze: ${breezeUp} Aurium: ${goldUp}`)
-  updatePowerUp()
+  enforce32bitLimit()
 }
 
 function updatePowerUp() {
   var diceButton = document.querySelector('.dice-button')
   if (goldUp) {
-    sidePoints = sidePoints + 40
     diceButton.classList.remove('fire')
     diceButton.classList.add('gold')
     diceButton.classList.remove('seed')
@@ -790,12 +1035,15 @@ function updatePowerUp() {
   document.getElementById('tubes').innerText = `Tubes: ${tube}`;
   document.getElementById('gameVer').innerText = `Point Dynamics ${gameVer}`;
   document.getElementById('software').innerText = `Operating On C ${softwareVersion}`;
-  document.getElementById('ach1000').innerText = `1 Thousand Token Achivement: ${ach1000}`;
   document.getElementById('seeds').innerText = `Wheat Seeds: ${seeds}`;
 }
 function settings() {
   settingsOpen = !settingsOpen
-  loading()
+  if (!autoclicker) {
+    loading()
+    } else {
+    loading2()
+    }
   if (settingsOpen) {
     document.getElementById('settingsMenu').style.display = 'block'
   } else if (!settingsOpen) {
@@ -811,9 +1059,14 @@ function loadModFile() {
   reader.onload = function(e) {
     try {
       eval(e.target.result);
-      alert('✅ Mod File Loaded Successfully!');
+      alert('Addon File Loaded Successfully!');
+      if (!autoclicker) {
+      loading()
+      } else {
+      loading2()
+    }
     } catch (err) {
-      alert('Failed to load mod: ' + err);
+      alert('Failed to load addon: ' + err);
     }
   };
   reader.readAsText(file);
@@ -824,10 +1077,8 @@ function resetAllPointsAndSeeds() {
   rolledPoints = 0;
   sidePoints = 0;
   rollCount = 0;
-
   seeds = 0;
   seedUp = false;
-
   fireUp = false;
   waterUp = false;
   breezeUp = false;
