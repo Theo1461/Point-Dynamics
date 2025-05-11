@@ -19,9 +19,6 @@ body {
   position: relative;
   font-weight: bold;
 }
-#saved-points {
-  color: black;
-}
 #game-card {
   background-color: #F8F5EA;
   padding: 20px;
@@ -35,7 +32,7 @@ body {
   align-items: center;
   font-weight: bold;
   z-index: 2;
-  box-shadow: 0px 10px 5px -5px rgb(0, 0, 0);
+  box-shadow: 0px 10px 5px -5px rgba(0, 0, 0,0.45);
 }
 #sidebar {
   border-radius: 10px;
@@ -46,7 +43,8 @@ body {
   height: 200px;
   top: 25%vh;
   right: 10vw;
-  box-shadow: 0px 10px 5px -5px rgb(0, 0, 0);
+  z-index: 0;
+  box-shadow: 0px 10px 5px -5px rgba(0, 0, 0,0.45);
 }
 #loading {
   position: fixed;
@@ -66,7 +64,7 @@ body {
   justify-content: center;
   position: relative;
   cursor: pointer;
-  box-shadow: 0px 9px 8px -5px rgba(56, 55, 49, 1);
+  box-shadow: 0px 9px 8px -5px rgba(0, 0, 0, 0.45);
 }
 .setting-button {
   font-weight: bolder;
@@ -85,7 +83,7 @@ body {
   justify-content: center;
   position: relative;
   cursor: pointer;
-  box-shadow: 0px 8px 5px -1px rgb(0, 0, 0);
+  box-shadow: 0px 9px 10px -5px rgba(0, 0, 0, 0.45);
   font-size: 30px;
 }
 #settings-card h5 {
@@ -147,6 +145,9 @@ body {
 .dice-button.water::before {
   background-color: rgb(45, 96, 237);
 }
+.dice-button.rust::before {
+  background-color: rgb(131, 99, 72);
+}
 #loading-line {
   position: relative;
   color: black;
@@ -157,7 +158,7 @@ body {
   height: 50px;
   background-color: #EFEAD4;
   animation: moveline 10s linear forwards;
-  z-index: 101;
+  z-index: 103;
   box-shadow: 0px 10px 5px -5px rgba(56, 55, 49, 1);
 }
 @keyframes moveline {
@@ -170,7 +171,7 @@ body {
 }
 #gameVer {
   z-index: 101;
-  color: #0c0c0c;
+  color: #ffffff;
   position: relative;
   top: 30%;
   justify-content: center;
@@ -178,7 +179,7 @@ body {
 }
 #software {
   z-index: 101;
-  color: #0c0c0c;
+  color: #ffffff;
   position: relative;
   top: 10%;
   justify-content: center;
@@ -405,10 +406,78 @@ input[type="file"]:focus {
   font-family: 'Ubuntu', sans-serif;
   left: 20px;
 }
+#background2106 {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: none;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background-color: #EDC9Af;
+  overflow: hidden;
+  }
+
+.pyramid {
+  width: 200px;
+  height: 150px;
+  position: absolute;
+  }
+
+.pyramid.one {
+  left: 20%;
+  border-bottom: 150px solid #c89c78;
+  clip-path: polygon(97% 0%, 3% 0%, 100% 100%, 0% 100%);
+  transform: scale(4);
+  bottom: 18%;
+  }
+
+.pyramid.two {
+  left: 57%;
+  bottom: 30%;
+  clip-path: polygon(99% 0%, 1% 0%, 100% 100%, 0% 100%);
+  transform: scale(5);
+  border-bottom: 150px solid #b88d69;
+  }
+.desert-static-wave {
+  position: fixed;
+  width: 350%;
+  text-align: center;
+  font-size: 97.5px;
+  color: #f1caaf;
+  font-family: monospace;
+  font-weight: bolder;
+  pointer-events: none;
+  z-index: -1;
+  transform: translateX(0);
+  text-shadow: 2px 2px 4px rgba(232, 193, 164, 0.2)
+}
+.rust-circle {
+  width: 10px;
+  height: 10px;
+  background-color: #8B4513;
+  border-radius: 50%;
+}
+#soft-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 130vw;
+  height: 110vh;
+  background-image: url('paper.webp');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 9137438328
+}
 </style>
 <script src="software.js"></script>
 </head>
 <body>
+<div id="soft-overlay"></div>
+  <div id="rust-indicator" style="position: fixed; top: 10vh; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 100;"></div>
   <canvas id="rainCanvas"></canvas>
   <div id="mod-container" style="display: none;">
     <div id="mod-header">
@@ -445,29 +514,32 @@ input[type="file"]:focus {
       <div class="achievement-box" id="ach1000-box"><p style="position: relative;left: 30px; width: 250px;">  1000 Tokens Collected</p></div>
       <div class="achievement-box" id="ach10000-box"><p style="position: relative;left: 30px; width: 250px;">10000 Tokens Collected</p></div>
       <div class="achievement-box" id="ach20000-box"><p style="position: relative;left: 30px; width: 250px;">20000 Tokens Collected</p></div>
-      <div class="achievement-box" id="ach50000-box"><p style="position: relative;left: 30px; width: 250px;">50000 Tokens Collected</p></div>
+      <div class="achievement-box" id="ach50000-box" style="display: none;"><p style="display: none; position: relative;left: 30px; width: 250px;">50000 Tokens Collected</p></div>
     </div>
 
     <div style="position: fixed; top: 250px; left: 25%;"class="button-container">
       <button onclick="executeOn()">Coding Tools<p class="info-text">Developer Mode <br>(NO Achievements)</p></button>
       <button onclick="tubetrade()">Get Tubes <p class="info-text">5 Tokens = 1 Tube</p></button>
-      <button onclick="tubes1()">Mesa Planet<p class="info-text">Mesa Zone Only</p></button>
+      <button onclick="tubes1()">Desert Planet<p class="info-text">Unlock Windswept Desert</p></button>
       <button onclick="startAutoClicker()">Auto Rolling <p class="info-text">Enable Auto Roll (10s)</p></button>
       <button onclick="settings()" class="setting-button2">O<p class="info-text">Exit Settings</p></button>
     </div>
   </div>
 </div>
 <div id="loading" style="display: none">
+    <div id="background2106">
+  <div class="pyramid one"></div>
+  <div class="pyramid two"></div>
+</div>
   <div id="gameVer"></div>
   <div id="software"></div>
   <div id="loading-line"></div>
 </div>
 <div id="game-card">
-<p>v.2.10.5</p>
+<p>v.2.10.6.10 Prv</p>
 <button class="dice-button"onclick="rollDice()"></button>
 <button class="setting-button" onclick="settings()">⬣</button>
 </div>
-<div id="lowerbar" style="display: none;"></div>
 <div id="sidebar">
 <p>Sidebar</p>
 <div id="saved-points"></div>
@@ -476,13 +548,23 @@ input[type="file"]:focus {
 <div id="seeds"></div>
 </div>
 <script>
-  let gameVer = 2.105
+  let gameVer = 2.10610
   let terminalOffsetX = 0
   let terminalOffsetY = 0
   let terminalDragging = false
   let modOffsetX = 0
   let modOffsetY = 0
   let modDragging = false
+function updateRustCircles(rustRounds) {
+  const container = document.getElementById('rust-indicator');
+  container.innerHTML = '';
+  if (rustRounds <= 0) return;
+  for (let i = 0; i < rustRounds; i++) {
+    const circle = document.createElement('div');
+    circle.className = 'rust-circle';
+    container.appendChild(circle);
+  }
+}
 
 if (softwareVersion >= "211") {
   console.log(`Running Software C ${softwareVersion}`)
@@ -525,7 +607,6 @@ document.onmousemove = function(e) {
   modContainer.style.top = e.clientY - modOffsetY + 'px'
   }
 }
-
 document.onmouseup = function() {
   modDragging = false
 }
@@ -537,10 +618,15 @@ window.addEventListener('wheel', function(event) {
   if(event.ctrlKey) {
   event.preventDefault()
 }})
+if (loadingtextblk) {
+document.getElementById('gameVer').style.color = '#000000';
+document.getElementById('software').style.color = '#000000';
+}
 function startAutoClicker() {
 if (savedPoints >= 75) {
 if (!autoclicker) {
   savedPoints = savedPoints - 75
+  updatePowerUp()
   autoclicker = true
   autoClickerInterval = setInterval(rollDice, 100)
   autoClickerTimeout = setTimeout(stopAutoClicker, 10000)
@@ -679,23 +765,42 @@ function loading() {
   if (savedPoints < 2147483647) {
   const loadingLine = document.getElementById('loading-line')
   document.getElementById('loading').style.display = "block"
+  document.getElementById('background2106').style.display = "block"
   updatePowerUp()
   loadingLine.style.animation = "moveline 5s linear forwards"
   setTimeout(function() {
   document.getElementById('loading').style.display = "none"
+  document.getElementById('background2106').style.display = "none"
   updatePowerUp()
   if (softwareVersion >= "211") {
   console.log(`Running Software C ${softwareVersion}`)
 }
 }, 2525)}}
-function loading2() {
-  if (savedPoints < 2147483647) {
+function loading3() {
+  {
   const loadingLine = document.getElementById('loading-line')
   document.getElementById('loading').style.display = "block"
+  document.getElementById('background2106').style.display = "block"
   updatePowerUp()
   loadingLine.style.animation = "moveline 1s linear forwards"
   setTimeout(function() {
   document.getElementById('loading').style.display = "none"
+  document.getElementById('background2106').style.display = "none"
+  updatePowerUp()
+  if (softwareVersion >= "211") {
+  console.log(`Running Software C ${softwareVersion}`)
+}
+}, 505)}}
+function loading2() {
+  if (savedPoints < 2147483647) {
+  const loadingLine = document.getElementById('loading-line')
+  document.getElementById('loading').style.display = "block"
+  document.getElementById('background2106').style.display = "block"
+  updatePowerUp()
+  loadingLine.style.animation = "moveline 1s linear forwards"
+  setTimeout(function() {
+  document.getElementById('loading').style.display = "none"
+  document.getElementById('background2106').style.display = "none"
   updatePowerUp()
   if (softwareVersion >= "211") {
   console.log(`Running Software C ${softwareVersion}`)
@@ -704,7 +809,9 @@ function loading2() {
 function tubetrade() {
   if (savedPoints >= 5) {
   savedPoints = savedPoints - 5
+  
   tube = tube + 1
+
   updatePowerUp()
 } else {
   alert('Not enough Tokens')
@@ -826,11 +933,30 @@ function forceThunderSound(){
     button.click();
   }, 100);
 }
+loading3()
 function default1() {
   background = 10
 }
+savedPoints = parseInt(localStorage.getItem('savedPoints')) || 0;
+seeds = parseInt(localStorage.getItem('seeds')) || 0;
+sidePoints = parseInt(localStorage.getItem('sidePoints')) || 0;
+
 function rollDice() {
+  if(rustRounds > 0) {
+    rustRounds = rustRounds - 1;
+    updateRustCircles(rustRounds);
+    rust = Math.floor(Math.random() * sidePoints) + 1;
+    sidePoints = sidePoints - rust
+    rustyPoints = rustyPoints + rust
+    console.log("Rusty Points:", rustyPoints);
+    console.log("Rust Rounds:", rustRounds);
+  } else if (rustRounds === 0) {
+    rustyPoints = Math.ceil(rustyPoints / 3.25)
+    savedPoints = savedPoints - rustyPoints
+    rustyPoints = 0
+  }
   updateDisplay()
+  
   var diceButton = document.querySelector('.dice-button')
   diceButton.classList.remove('fire')
   diceButton.classList.remove('gold')
@@ -844,6 +970,7 @@ function rollDice() {
   breezeUp = false
   seedUp = false
   goldUp = false
+  rustUp = false
   sidePoints = sidePoints + rolledPoints
   rolledPoints = 0
 if (savedPoints >= 1000 && !ach1000 && !cheats) {
@@ -874,6 +1001,7 @@ if (savedPoints >= 50000 && !ach50000 && !cheats) {
   localStorage.setItem('ach50000', 'true');
 }
 
+
 if (localStorage.getItem('ach1000') === 'true' && !cheats) {
   ach1000 = true;
   document.getElementById('ach1000-box').classList.add('unlocked');
@@ -895,19 +1023,12 @@ if (localStorage.getItem('ach50000') === 'true' && !cheats) {
 }
   rolledPoints = Math.floor(Math.random() * 5 * multiplier) + 1;
   console.log(`Rolled Points: ${rolledPoints} Side Points: ${sidePoints}`)
-  if (Math.random() < 0.7) {
+  if (Math.random() < 0.875) {
     powerUp()
   }
 
   console.log(`Rounds: ${rollCount}`)
-  bg()
-  bgRounds = bgRounds - 1
-  if (unlocked1) {
-    default1()
-  }
-  if (bgRounds <= 0) {
-    background === 0
-  }
+
   if (rollCount % 10 === 0) {
   savedPoints = savedPoints + sidePoints
   sidePoints = 0
@@ -918,9 +1039,9 @@ function tubes1() {
   if (tube >= 100) {
   tube = tube - 100
   unlocked1 = true
+  updatePowerUp()
   background = 10
   loading()
-  updatePowerUp()
 } else {
   alert('Not enough tubes.')
 }}
@@ -928,7 +1049,7 @@ function tubes1() {
 function bg() {
 const gameCard = document.getElementById('game-card')
 const sidebar = document.getElementById('sidebar')
-if (background === 1 && document.getElementById('lowerbar').style.display === 'none') {
+if (background === 0) {
 if (!autoclicker) {
   loading()
 } else {
@@ -937,10 +1058,9 @@ if (!autoclicker) {
   gameCard.style.backgroundColor = '#E87D1E'
   sidebar.style.backgroundColor = '#E87D1E'
   document.body.style.backgroundColor = '#EBF8F9'
-  document.getElementById('lowerbar').style.display = 'block'
   document.getElementById('area').innerText = `Mesa`
 }
-if (background === 1 && bgRounds <= 0 && document.getElementById('lowerbar').style.display === 'block') {
+if (background === 1 && bgRounds <= 0) {
 if (!autoclicker) {
   loading()
 } else {
@@ -950,7 +1070,6 @@ if (!autoclicker) {
   gameCard.style.backgroundColor = '#F8F5EA'
   sidebar.style.backgroundColor = '#F8F5EA'
   document.body.style.backgroundColor = '#FDFAF4'
-  document.getElementById('lowerbar').style.display = 'none'
   background = 0
   document.getElementById('area').innerText = `Flat`
 }}
@@ -965,31 +1084,55 @@ function powerUp() {
     background = 1
     bgRounds = 25
   }
-  if (background === 10) {
-    const gameCard = document.getElementById('game-card')
-    const sidebar = document.getElementById('sidebar')
-    gameCard.style.backgroundColor = '#E87D1E'
-    sidebar.style.backgroundColor = '#E87D1E'
-    document.body.style.backgroundColor = '#EBF8F9'
-    document.getElementById('lowerbar').style.display = 'block'
-    background = 10
-    document.getElementById('area').innerText = `Mesa`
+if (background === 10) {
+  const gameCard = document.getElementById('game-card');
+  const sidebar = document.getElementById('sidebar');
+  gameCard.style.backgroundColor = '#f1caaf';
+  sidebar.style.backgroundColor = '#f1caaf';
+  document.body.style.backgroundColor = '#F6D6BD';
+  background = 10;
+  document.getElementById('area').innerText = `Windswept Desert`;
+  document.getElementById('area').style.color = `white`;
+
+  if (gameCard) gameCard.style.color = 'white';
+  if (sidebar) sidebar.style.color = 'white';
+  for (let i = 1; i <= 10; i++) {
+    const existing = document.getElementById(`desert-static-wave${i}`);
+    if (existing) existing.remove();
   }
+  for (let i = 1; i <= 10; i++) {
+    const waveLine = document.createElement('div');
+    waveLine.id = `desert-static-wave${i}`;
+    waveLine.className = 'desert-static-wave';
+    waveLine.innerText = '﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏';
+    waveLine.style.opacity = `${0.4 + (i * 0.07)}`;
+    const offsetX = Math.floor(Math.random() * 5) - 1; // -1, 0, or 1
+    waveLine.style.left = `${offsetX}px)`;
+    waveLine.style.top = `${(i + 5) * 8}vh`;
+
+    document.body.appendChild(waveLine);
+  }
+}
   if (obsidianRolled) {
-    if (Math.random() < 0.5){
-      waterUp = true
-    } else {
-      fireUp = true
-    }
+    const rand = Math.random();
+
+    if (rand < 0.5 && background === 0) {
+      waterUp = true;
+    } else if (rand < 0.98) {
+      fireUp = true;
+    } else if (rustRounds === 0) {
+      rustUp = true;
   }
+}
+
   if (earthRolled) {
     if (Math.random() < 0.5) {
 
-    } else if (Math.random() < 0.5 && background === 1 || background === 10) {
+    } else if (Math.random() < 0.8 && background === 10) {
       goldUp = true
       console.log('Aurium (Golden)')
       sidePoints = sidePoints + 50
-    } else if (Math.random() < 0.5 && background === 0) {
+    } else if (Math.random() < 0.2 && background === 0) {
       seedUp = true
     }
   }
@@ -1005,6 +1148,7 @@ function updatePowerUp() {
     diceButton.classList.add('gold')
     diceButton.classList.remove('seed')
     diceButton.classList.remove('water')
+    diceButton.classList.remove('rust')
   }
   if (seedUp) {
     seeds = seeds + rolledPoints
@@ -1013,6 +1157,7 @@ function updatePowerUp() {
     diceButton.classList.remove('gold')
     diceButton.classList.add('seed')
     diceButton.classList.remove('water')
+    diceButton.classList.remove('rust')
   }
   if (fireUp) {
     sidePoints = 0
@@ -1020,6 +1165,7 @@ function updatePowerUp() {
     diceButton.classList.remove('gold')
     diceButton.classList.remove('seed')
     diceButton.classList.remove('water')
+    diceButton.classList.remove('rust')
   }
   if (waterUp) {
     savedPoints = savedPoints + seeds
@@ -1028,14 +1174,27 @@ function updatePowerUp() {
     diceButton.classList.remove('gold')
     diceButton.classList.remove('seed')
     diceButton.classList.add('water')
+    diceButton.classList.remove('rust')
+  }
+    if (rustUp) {
+    rustRounds = 10
+    diceButton.classList.remove('fire')
+    diceButton.classList.remove('gold')
+    diceButton.classList.remove('seed')
+    diceButton.classList.remove('water')
+    diceButton.classList.add('rust')
   }
   document.getElementById('saved-points').innerText = `Token Points: ${savedPoints}`;
   document.getElementById('rolled-points').innerText = `Roll Points: ${rolledPoints}`;
   document.getElementById('side-points').innerText = `Side Points: ${sidePoints}`;
   document.getElementById('tubes').innerText = `Tubes: ${tube}`;
-  document.getElementById('gameVer').innerText = `Point Dynamics ${gameVer}`;
+  document.getElementById('gameVer').innerText = `Point Dynamics ${gameVer.toFixed(5)}`;
   document.getElementById('software').innerText = `Operating On C ${softwareVersion}`;
   document.getElementById('seeds').innerText = `Wheat Seeds: ${seeds}`;
+  localStorage.setItem('savedPoints', savedPoints.toString());
+  localStorage.setItem('seeds', seeds.toString());
+  localStorage.setItem('sidePoints', sidePoints.toString());
+  localStorage.setItem('tube', tube.toString());
 }
 function settings() {
   settingsOpen = !settingsOpen
@@ -1099,6 +1258,7 @@ function resetAllPointsAndSeeds() {
 
   console.log("All points and seeds have been reset.");
 }
+
 </script>
 </body>
 </html>
