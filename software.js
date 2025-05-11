@@ -23,7 +23,7 @@ let bgRounds = 0
 let cactusUp = false
 let goldUp = false
 //2.10.0.6//
-let tube = 100
+let tube = 0
 let unlocked1 = false
 //2.10.0.7//
 let seeds = 0
